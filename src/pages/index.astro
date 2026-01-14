@@ -1,16 +1,17 @@
 ---
+import { getCollection } from 'astro:content';
+import { getAllIngredients } from '@/utils/ingredients';
 
+import Base from '@/layouts/Base.astro';
+import RecipeList from '@/components/RecipeList.astro';
+
+const recipes = await getCollection('recipes');
+const ingredients = await getAllIngredients();
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+
+<Base stats={{
+      totalRecipes: recipes.length,
+  }}>
+  <RecipeList recipes={recipes} />
+</Base>

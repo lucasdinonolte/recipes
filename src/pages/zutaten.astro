@@ -1,0 +1,48 @@
+---
+import { getCollection } from 'astro:content';
+import { getAllIngredients } from '@/utils/ingredients';
+import { paths } from '@/constants/paths';
+
+import Base from '@/layouts/Base.astro';
+
+const recipes = await getCollection('recipes');
+const ingredients = await getAllIngredients();
+---
+
+<Base 
+  stats={{
+    totalIngredients: ingredients.length,
+    }}
+    showCloseLink={true}
+    >
+<ul>
+  {ingredients.map((ingredient, i) => (
+<li class="item" style={`animation-delay: ${i * 35}ms`}>
+  <a href={paths.ingredients.ingredient(ingredient.slug)} class="flex justify-between">
+        <h2 class="f-mono">{ingredient.name}</h2>
+        <span class="f-mono text-right">{ingredient.recipes.length.toString().padStart(2, "0")}</span>
+  </a>
+      </li>
+    ))}
+  </ul>
+</Base>
+
+<style>
+  .item {
+    opacity: 0;
+    animation: fadeIn .35s cubic-bezier(.25, .25, .67, .885) forwards;
+  }
+
+  .item + .item {
+    margin-top: 0.5rem;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+</style>

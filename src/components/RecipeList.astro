@@ -1,0 +1,65 @@
+---
+import { CollectionEntry } from 'astro:content';
+import { paths } from '@/constants/paths';
+
+interface Props {
+  recipes: Array<CollectionEntry<'recipes'>>;
+}
+
+const { recipes } = Astro.props;
+---
+
+<ul>
+  {recipes.map((recipe, i) => (
+  <li key={recipe.id} class="recipe-item" style={`animation-delay: ${i * 50}ms`}>
+    <a href={paths.recipe(recipe.id)} class="l-grid">
+      <h2 class="title col-span-6 md:col-span-4">{recipe.data.title}</h2>
+      <span class="hidden md:flex col-span-4 f-mono">
+        Suppe
+      </span>
+      <span class="hidden md:block col-span-2 f-mono">{recipe.data.ingredients.length.toString().padStart(2, "0")} Zutaten</span>
+      <span class="block text-right col-span-6 md:col-span-2 f-mono">{recipe.data.prepTime} min</span>
+    </a>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .recipe-item {
+    opacity: 0;
+    animation: fadeIn .35s cubic-bezier(.25, .25, .67, .885) forwards;
+  }
+
+  .recipe-item + .recipe-item {
+    margin-top: 0.5rem;
+  }
+
+  .recipe-item a {
+    transition: color 200ms ease-in-out;
+  }
+
+  .recipe-item a:hover {
+    color: var(--color-text-secondary);
+  }
+
+  .title {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .tags,
+  .ingredients-count,
+  .prep-time {
+    font-family: var(--font-mono);
+    white-space: nowrap;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+</style>

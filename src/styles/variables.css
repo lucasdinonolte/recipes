@@ -1,0 +1,33 @@
+:root {
+  --color-text-primary: #000000;
+  --color-text-secondary: rgb(114, 144, 144);
+  --color-background-default: #ffffff;
+
+  --color-border-default: rgb(233, 233, 233);
+
+  --text-default: 14px;
+  --text-large: 16px;
+
+  --font-sans: 'Sneak', Helvetica, Arial, sans-serif;
+  --font-mono: 'Sneak Mono', Courier, monospace;
+}
+
+[data-theme="inverted"] {
+  --color-text-primary: #ffffff;
+  --color-text-secondary: rgb(145, 175, 175);
+  --color-background-default: #000000;
+
+  --color-border-default: rgb(40, 40, 40);
+}
+
+.l-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    column-gap: 1.25rem;
+    row-gap: 2.5rem;
+  }
+
+.f-mono {
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+}

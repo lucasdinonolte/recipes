@@ -1,0 +1,102 @@
+---
+import { ClientRouter } from "astro:transitions";
+import { pluralize } from '@/utils/strings';
+import { paths } from '@/constants/paths';
+
+interface Props {
+  title?: string;
+  showCloseLink?: boolean;
+  inverted?: boolean;
+  stats: {
+    totalRecipes?: number;
+    totalIngredients?: number;
+  };
+}
+
+import '@/styles/variables.css';
+
+const { inverted, title, showCloseLink, stats = {} } = Astro.props;
+---
+
+<html lang="de-DE">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<title>Astro</title>
+
+    <ClientRouter />
+	</head>
+  <body data-theme={inverted ? 'inverted' : 'light'}>
+    <header class="flex justify-between items-start">
+      <div>
+      {title && <h1 class="title mb-4">{title}</h1>}
+
+      <div class="f-mono flex flex-col gap-1">
+        {stats.totalRecipes && <a href="/">{stats.totalRecipes} {pluralize(stats.totalRecipes, 'Rezept', 'Rezepte')}</a>}
+        {stats.totalIngredients && <a href={paths.ingredients.root()}>{stats.totalIngredients} {pluralize(stats.totalIngredients, 'Zutat', 'Zutaten')}</a>}
+      </div>
+      </div>
+
+      {showCloseLink ? (
+      <a href="/" class="f-mono trigger-button">Schließen</a>
+      ) : (
+<button class="f-mono trigger-button" popovertarget="mypopover">Filter</button>
+<div class="popover" id="mypopover" popover>
+<a href="/zutaten" class="f-mono trigger-button">Zutaten</a>
+</div>
+)}
+    </header>
+    <main>
+      <slot />
+    </main>
+	</body>
+</html>
+
+<style>
+  body {
+    background-color: var(--color-background-default);
+    color: var(--color-text-primary);
+    font-size: var(--text-default);
+    line-height: 1.25;
+  }
+
+  header {
+    margin-right: 0.625rem;
+    margin-left: 0.625rem;
+    padding-top: 0.625rem;
+    padding-bottom: 0.625rem;
+    height: clamp(220px, 35lvh, 600px);
+  }
+
+  .title {
+text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .trigger-button {
+    transition: color 200ms ease-in-out;
+  }
+
+  .trigger-button:hover {
+    color: var(--color-text-secondary);
+  }
+
+  .popover {
+    margin: 0;
+    top: calc(anchor(bottom) + 0.625rem);
+    right: 0.625rem;
+    justify-self: anchor-center;
+    padding: 0.625rem;
+    width: clamp(200px, 30vw, 300px);
+    border: 1px solid var(--color-border-default);
+  }
+
+
+main {
+  margin-right: 0.625rem;
+  margin-left: 0.625rem;
+  padding-top: 0.625rem;
+  border-top: 1px solid var(--color-border-default);
+}
+</style>

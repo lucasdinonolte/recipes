@@ -1,0 +1,28 @@
+---
+import { getCollection } from 'astro:content';
+import { getAllIngredients } from '../../utils/ingredients';
+
+import Base from '@/layouts/Base.astro';
+import RecipeList from '@/components/RecipeList.astro';
+
+export async function getStaticPaths() {
+  const ingredients = await getAllIngredients();
+  
+  return ingredients.map(ingredient => ({
+    params: { slug: ingredient.slug },
+    props: { ingredient },
+  }));
+}
+
+const { ingredient } = Astro.props;
+const allRecipes = await getCollection('recipes');
+
+const recipes = allRecipes.filter(recipe => ingredient.recipes.includes(recipe.id));
+---
+
+<Base 
+  stats={{ totalRecipes: ingredient.recipes.length }} 
+  showCloseLink={true}
+  >
+  <RecipeList recipes={recipes} />
+</Base>

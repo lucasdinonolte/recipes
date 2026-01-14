@@ -1,0 +1,55 @@
+---
+import { getCollection, getEntry, render } from 'astro:content';
+
+import { parseRawIngredient, ingredientSlug } from '@/utils/ingredients';
+import Base from '@/layouts/Base.astro';
+import { paths } from '@/constants/paths';
+
+export async function getStaticPaths() {
+  const recipes = await getCollection('recipes');
+  return recipes.map((recipe) => ({
+    params: { id: recipe.id },
+    props: { recipe },
+  }));
+}
+
+const { recipe } = Astro.props;
+---
+
+<Base title={recipe.data.title} showCloseLink={true} inverted={true}>
+  <div class="view l-grid">
+    <ul class="col-span-12 md:col-span-4 f-mono">
+      {recipe.data.ingredients.map((ingredient) => {
+      const slug = ingredientSlug(parseRawIngredient(ingredient));
+      return slug ? (
+        <li class="mb-2"><a href={paths.ingredients.ingredient(slug)}>{ingredient}</a></li>
+        ) : <li class="mb-2">{ingredient}</li>; })}
+    </ul>
+    <div class="col-span-12 md:col-span-7">
+      {recipe.data.steps.map((step, i) => (
+        <p class="mb-8 f-mono step">{step}</p>
+      ))}
+    </div>
+  </div>
+</Base>
+
+<style>
+  .view {
+    opacity: 0;
+    animation: fadeIn .35s cubic-bezier(.25, .25, .67, .885) forwards;
+  }
+
+  .step {
+    line-height: 1.7;
+    word-spacing: 0.075em;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+</style>
